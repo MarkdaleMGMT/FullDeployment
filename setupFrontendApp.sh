@@ -3,6 +3,7 @@ ipAddress=`wget http://ipecho.net/plain -O - -q ; echo`
 
 touch ./$dashboardFolder/src/config.js
 node inputFrontend.js ./$dashboardFolder/src/config
+#node consistentIP.js ./$dashboardFolder/src
 
 echo "\n Building Produciton Build of $dashboardFolder \n"
 
