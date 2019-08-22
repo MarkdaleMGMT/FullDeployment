@@ -35,7 +35,7 @@ tests = {
       {
         should: 'Should Retrieve Created Investment',
         api: "/frontend/all_investments",
-        method: "get",
+        method: "post",
         body: {},
         check: function(all_investments){
             all_investments = all_investments.investments
