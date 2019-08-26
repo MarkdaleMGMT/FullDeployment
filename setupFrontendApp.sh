@@ -1,6 +1,8 @@
+#The first argument when calling this script is the react folder to be deloploed
 dashboardFolder=$1
 ipAddress=`wget http://ipecho.net/plain -O - -q ; echo`
 
+#Touch to check if config file exists. Call inputfrontend.js to configure config.js file
 touch ./$dashboardFolder/src/config.js
 node inputFrontend.js ./$dashboardFolder/src/config
 #node consistentIP.js ./$dashboardFolder/src

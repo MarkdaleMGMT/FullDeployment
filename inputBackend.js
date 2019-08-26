@@ -45,14 +45,14 @@ async function processInput(targetField, configIndex){
         } else { //We ask the user to input it
 
             answer = ""
-            if (targetField == 'DB_PASS'){
+            if (targetField == 'DB_PASS'){ //Mask input if password
                 answer = await inquirer.prompt({
                     message: `Enter Input For ${targetField}?`,
                     type: 'password',
                     mask: '*',
                     name: 'answer'
                   });
-            } else if (targetField == 'DB_HOST') {
+            } else if (targetField == 'DB_HOST') { //When asking for db host, ask if they want to use manual or default
                 answer = await inquirer.prompt([
                     {
                         message: `Use Default IP Address (${ipAddress}) For ${targetField}?`,

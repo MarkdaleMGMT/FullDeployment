@@ -71,12 +71,12 @@ async function main() {
 
     ipAddress = await publicIp.v4()
     answer = await inquirer.prompt([ 
-        {
+        {//Ask user if they want to use their public ip address
             message: `Use Default IP Address (${ipAddress}) frontEndApp?`,
             type: 'confirm',
             name: 'confirm'
         }, 
-        {
+        {//Ask user to input manual ip address if they don't want to use default ip
             type: 'input',
             name: 'answer',
             message: `Enter IP Address for FrontendApp`,
@@ -87,8 +87,8 @@ async function main() {
     if (!answer.confirm){
         ipAddress = answer.answer
     }
-    rootFolder = process.argv[2]
-    traverse(rootFolder)
+    rootFolder = process.argv[2] //The first argument when called through cli is the folder whose contents needs to be changed
+    traverse(rootFolder) //Traverse the folder and change all instances of ipaddresses to this new address
     
 
 }

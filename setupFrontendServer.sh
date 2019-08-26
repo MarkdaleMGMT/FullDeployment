@@ -1,21 +1,19 @@
+#First argument when calling this script on cli is the frontend server file
 frontend=$1
 
-#Get public ip_address
-#ip_address=`wget http://ipecho.net/plain -O - -q ; echo`
-#echo $ip_address
-
-#touch ./$1/config/components/mysql.js
-#node inputFrontend.js ./$1/config/components/mysql
-
+#Call on inputServer.js to make changes on specified frontend server
 node inputServer $frontend
 cp -f "ecosystem.config.js" ./$frontend/
 
+#Delete any pm2 processes called frontend_server. Our goal is to rest
 echo "" > pm2Delete.txt
 pm2 delete "frontend_server"
 
+#Run the new frontend server
 cd $frontend
 sudo npm install --verbose
 pm2 start -f ecosystem.config.js
 cd ..
 
+#Reset nginx to adhere changes
 sudo service nginx restart
