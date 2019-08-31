@@ -22,41 +22,44 @@ async function main(){
 
         if (skipKeys.includes(key)) {
             //Do nothing
-        } else if (passwordKeys.includes(key)) {
+        } else if (passwordKeys.includes(key)) { //Ask password related question
             answer = await inquirer.prompt({
                 message: `Enter ${key}?`,
                 type: 'password',
                 mask: '*',
                 name: 'answer'
               });
-        } else if (ipKeys.includes(key)){
+        } else if (ipKeys.includes(key)){ //Ask IP related questions
             answer = await inquirer.prompt([ 
                 {
-                    message: `Use Default IP Address (${ipAddress}) For ${key}?`,
+                    message: `Use Default IP Address (${ipAddress}) For ${key}? Type No to enter Domain`,
                     type: 'confirm',
                     name: 'confirm'
                 }, 
                 {
                     type: 'input',
                     name: 'answer',
-                    message: `Enter IP Address for ${key}`,
+                    message: `Enter IP Address or Domain for ${key}:`,
                     when: (answer) => { return !answer.confirm}
                 },
                 {
-                    type: 'confirm',
-                    name: 'confirmHTTP',
-                    message: `Prepend http:// before IP Address?`,
+                    type: 'list',
+                    name: 'http',
+                    choices: ['http://', 'https://', 'None'],
+                    message: `Do You Want To Prepend Anything to IP/Domain?`,
                 }
             ]);
             
-            if (answer.confirm){
+            if (answer.confirm){ //Did they want to use default ip?
                 answer.answer = ipAddress
             } 
 
-            if (answer.confirmHTTP){
-                answer.answer = `http://${answer.answer}`
+            //Prepend http or https based on user input
+            if (answer.http == 'http://' || answer.http == 'https://'){
+                answer.answer = `${answer.http}${answer.answer}`
             }
-        } else {
+
+        } else { //Ask anything else in the config file
             answer = await inquirer.prompt(
                 {
                     type: "input",
@@ -70,7 +73,7 @@ async function main(){
 
     let write = `module.exports = ${JSON.stringify(configObject)}`
     
-    // Write data in 'Output.txt' . 
+    // Write data to filePath
     fs.writeFile(`${filePath}.js`, write, (err) => { 
         
     // In case of a error throw err. 
