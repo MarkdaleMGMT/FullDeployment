@@ -25,7 +25,7 @@ sudo systemctl reload nginx
 
 #Provide link address
 #$LINK="$ipAddress"
-$LINK = `node getFrontendAppAddress.js`
 
 echo "\n \n \n"
-echo "Website up at: \n$LINK\n"
+echo "Website up at:"
+node getFrontendAppAddress.js
