@@ -22,7 +22,7 @@ server_code="server {
 	root /var/www/build;
         index index.php index.html index.htm index.nginx-debian.html;
         server_name $ipAddress;
-	#return 301 http://$ipAddress/signin/;
+	#return 301 http://$ipAddress/login/;
         location  ^~/backend {
                 proxy_pass http://localhost:3000;
                 proxy_http_version 1.1;
