@@ -4,6 +4,7 @@ const fs = require('fs') //File Writer
 const folder = process.argv[2]
 
 let sampleEcosystemConfig = require(`./${folder}/sample-ecosystem.config`).apps
+let descriptions =  require(`./${folder}/ecosystem-config-descriptions`)
 
 let inputDict = {} //This will store inputs that have been processed already
 
@@ -41,6 +42,10 @@ async function processInput(targetField, configIndex){
     const ipAddress = await publicIp.v4()
 
     if (targetField != 'NODE_ENV'){
+
+        // Check if there is a comment for the given field
+        let comment  = targetField in descriptions ? descriptions[targetField] : ""
+
         if (targetField in inputDict){ //If we have input it before, use the same answer
             sampleEcosystemConfig[configIndex].env[targetField] = inputDict[targetField]
         } else { //We ask the user to input it
@@ -48,7 +53,7 @@ async function processInput(targetField, configIndex){
             answer = ""
             if (targetField == 'DB_PASS'){
                 answer = await inquirer.prompt({
-                    message: `Enter Input For ${targetField}?`,
+                    message: `Enter Input For ${targetField}? (${comment})`,
                     type: 'password',
                     mask: '*',
                     name: 'answer'
@@ -56,7 +61,7 @@ async function processInput(targetField, configIndex){
             } else if (targetField == 'DB_HOST') {
                 answer = await inquirer.prompt([
                     {
-                        message: `Use Default IP Address (${ipAddress}) For ${targetField}?`,
+                        message: `Use Default IP Address (${ipAddress}) For ${targetField}? (${comment})`,
                         type: 'confirm',
                         name: 'confirm'
                     }, 
@@ -75,7 +80,7 @@ async function processInput(targetField, configIndex){
                 answer = await inquirer.prompt([ {
                     type: 'input',
                     name: 'answer',
-                    message: `Enter Input For ${targetField}?`,
+                    message: `Enter Input For ${targetField}? (${comment})`,
                 }])
                 
                 
