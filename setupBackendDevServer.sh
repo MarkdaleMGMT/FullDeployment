@@ -9,10 +9,8 @@ pm2 delete "server"
 
 #Run the backend server by making pm2 call the updated ecosystem.config.js file
 cd $backend
-sudo npm install --verbose
-sudo npm rebuild
+npm install --verbose
+npm rebuild
 pm2 start -f ecosystem.config.js
 cd ..
 
-#Reset nginx to adhere changes
-sudo service nginx restart
