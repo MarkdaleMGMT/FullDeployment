@@ -2,6 +2,7 @@
 
 #Save developer-specific information
 domain=$1
+ipAddress=`wget http://ipecho.net/plain -O - -q ; echo`
 
 #Create main configuration file
 #Note: We do not touch defualt incase we need it in the future. 
@@ -13,16 +14,33 @@ echo $configFile
 
 #Append 
 server_code="server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-        # SSL configuration
+        #listen 80 default_server;
+        #listen [::]:80 default_server;
+	#listen 80;
+	listen 443 default_server ssl;
+	#listen [::]:443 default_server;
+
+	server_name markdalefinancial.ca;
+	add_header 'Access-Control-Allow-Origin' '*' always;
+	
+	#ssl on;
+	ssl_certificate /etc/letsencrypt/live/markdalefinancial.ca/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/markdalefinancial.ca/privkey.pem;
+
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';        
+	
+	if (\$server_port = 80) {
+	rewrite ^/(.*)$ https://$domain/\$1 permanent;
+	}
+
+	# SSL configuration
         #...
         #root /var/www/build;
         #index index.html index.htm;
 	root /var/www/build;
         index index.php index.html index.htm index.nginx-debian.html;
-        server_name $domain;
-	#return 301 http://$ipAddress/login/;
         location  ^~/backend {
                 proxy_pass http://localhost:3000;
                 proxy_http_version 1.1;
@@ -75,9 +93,15 @@ server_code="server {
                 proxy_cache_bypass \$http_upgrade;
         }
 }
+server {
+	listen 80 default_server;
+	server_name $ipAddress;
+	return 301 $domain;
+}
 ## To track where nginx is redirecting the path location ##
-log_format requests    \" \$request_filename \";
+log_format requests    " \$request_filename ";
 access_log /var/log/nginx/access.log requests;
+
 "
 
 # Replace NGINX config
