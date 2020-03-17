@@ -24,8 +24,8 @@ server_code="server {
 	add_header 'Access-Control-Allow-Origin' '*' always;
 	
 	#ssl on;
-	ssl_certificate /etc/letsencrypt/live/markdalefinancial.ca/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/markdalefinancial.ca/privkey.pem;
+	ssl_certificate ./;
+	ssl_certificate_key ./;
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
