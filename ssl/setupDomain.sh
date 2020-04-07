@@ -20,13 +20,9 @@ server_code="server {
 	listen 443 default_server ssl;
 	#listen [::]:443 default_server;
 
-	server_name markdalefinancial.ca;
+	server_name $domain;
 	add_header 'Access-Control-Allow-Origin' '*' always;
 	
-	#ssl on;
-	ssl_certificate ./;
-	ssl_certificate_key ./;
-
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';        
@@ -117,7 +113,7 @@ server_code="server {
 server {
 	listen 80 default_server;
 	server_name $ipAddress;
-	return 301 $domain;
+	return 301 https://$domain;
 }
 ## To track where nginx is redirecting the path location ##
 log_format requests    \" \$request_filename \";
