@@ -75,14 +75,35 @@ server_code="server {
         location / { #When ip_address/dashboard is accessed display the index.html in the react/vue folder
                 alias /var/www/build;
                 try_files  \$uri \$uri/ /index.html =404;
+
+                
+                add_header Last-Modified \$date_gmt;
+                add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+                if_modified_since off;
+                expires -1;
+                etag off;
 	}
 	location ~/(?:index.html)?$ {
    		root /var/www/build/;
     		index index.html;
+
+                
+                add_header Last-Modified \$date_gmt;
+                add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+                if_modified_since off;
+                expires -1;
+                etag off;
 	}
         location ^~ /static { #Open the css/index files for viewing
                 alias /var/www/build/static;
                 try_files \$uri =404;
+
+                
+                add_header Last-Modified \$date_gmt;
+                add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+                if_modified_since off;
+                expires -1;
+                etag off;
         }
         location ^~ /frontend { #Host frontend on port 3001
                 proxy_pass http://localhost:3001;
@@ -99,7 +120,7 @@ server {
 	return 301 $domain;
 }
 ## To track where nginx is redirecting the path location ##
-log_format requests    " \$request_filename ";
+log_format requests    \" \$request_filename \";
 access_log /var/log/nginx/access.log requests;
 
 "
